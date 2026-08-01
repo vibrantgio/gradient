@@ -1,6 +1,6 @@
 # gradient
 
-A two-stop linear gradient fill for [VibrantGio](https://github.com/vibrantgio),
+A two-stop linear gradient fill for [Vibrant Gio](https://github.com/vibrantgio),
 a design system for native desktop applications on macOS, Windows and Linux,
 written in pure Go on [Gio](https://gioui.org). Two functions, thirty lines,
 no state.
