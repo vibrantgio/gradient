@@ -108,8 +108,9 @@ Honest about what does not work yet. Every count below is measured.
   parameter beyond choosing the two points, and no radial gradient — Gio
   exposes no radial primitive at all, which is why `pulse` fakes one out of
   eight linear passes. Phase E of the
-  [org plan](https://github.com/vibrantgio/.github) builds a blur on
-  `gioui.org/gpu/headless` and revisits that; it does not claim this module.
+  [org plan](https://github.com/vibrantgio/.github) built `pulse/blur` on
+  `gioui.org/gpu/headless` and revisited that — the E4.4 verdict kept the
+  eight-gradient halo — and it did not claim this module.
 - **`LinearGradient` always takes all the space it is offered.** It clips to
   and returns `gtx.Constraints.Max`, ignoring `Constraints.Min`, so as a flex
   child it fills the flex rather than sizing to anything. It is a background
