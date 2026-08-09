@@ -5,8 +5,13 @@ paints into an op list, and `LinearGradient` returns a `layout.Widget`
 whose two stops are given as fractions of the widget's own size rather than
 in pixels.
 
-**Layer.** Tier 0 of ADR-001's table — a leaf whose only dependency is Gio.
-`mvu/example` is its only consumer anywhere in the organization.
+**Layer.** Tier 0 of ADR-001's table — a leaf whose only dependency outside
+the organization is Gio. Its root module imports nothing else in the
+organization. No other repository's root module imports it; outside the
+tier table it is imported by the demo module `mvu/example`. Both directions
+are measured rather than typed — `scripts/check-layers.sh --edges` reports
+the graph and `scripts/sync-agents.sh` renders these sentences from it — so
+correcting them here changes nothing.
 
 **Read the canonical guide before you write code against this module.** It is
 the organization's one agent guide — the module inventory with current tags,
