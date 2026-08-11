@@ -21,7 +21,7 @@ already own a clip.
 
 ## Where it sits
 
-Tier 0 of the stack — `mvu → theme → components → pulse → cadence → markdown` —
+Tier 0 of the stack — `mvu → theme → components → effects → cadence → markdown` —
 a leaf whose only dependency is Gio. The
 [organization page](https://github.com/vibrantgio) has the full tier table.
 
@@ -98,17 +98,17 @@ Honest about what does not work yet. Every count below is measured.
   program anywhere in the organization that imports this module, and
   `LinearGradient` is the only symbol it uses. `FillLinearGradient` has never
   been called outside this repository.
-- **The effects layer needed gradients and did not use this one.** `pulse/depth`
-  composes a cast shadow out of eight linear gradients and `pulse/glow` composes
+- **The effects layer needed gradients and did not use this one.** `effects/depth`
+  composes a cast shadow out of eight linear gradients and `effects/glow` composes
   a halo out of eight more, and both call `paint.LinearGradientOp` directly
   rather than importing this module — the fractional-stop widget is the wrong
   shape for compositing many gradients into one shape. Nothing in the current
   plan reconciles the two.
 - **Two stops, linear only.** There is no multi-stop gradient, no angle
   parameter beyond choosing the two points, and no radial gradient — Gio
-  exposes no radial primitive at all, which is why `pulse` fakes one out of
+  exposes no radial primitive at all, which is why `effects` fakes one out of
   eight linear passes. Phase E of the
-  [org plan](https://github.com/vibrantgio/.github) built `pulse/blur` on
+  [org plan](https://github.com/vibrantgio/.github) built `effects/blur` on
   `gioui.org/gpu/headless` and revisited that — the E4.4 verdict kept the
   eight-gradient halo — and it did not claim this module.
 - **`LinearGradient` always takes all the space it is offered.** It clips to
