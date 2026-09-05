@@ -8,15 +8,15 @@ no state.
 Gio has `paint.LinearGradientOp`, and it is not quite usable on its own. It
 takes its two stops as absolute `f32.Point`s in the current coordinate space,
 it paints nothing until you follow it with a `paint.PaintOp`, and it paints
-into whatever clip happens to be current — so filling a widget with a gradient
-that runs corner to corner means knowing the widget's pixel size, building the
+into whatever clip happens to be current — so filling a component with a gradient
+that runs corner to corner means knowing the component's pixel size, building the
 clip yourself, and remembering the second op. That is four lines of ceremony
 every time, and the pixel arithmetic has to be redone on every resize.
 
-`LinearGradient` takes its stops as *fractions of the widget's own size* —
+`LinearGradient` takes its stops as *fractions of the component's own size* —
 `f32.Pt(0, 0)` to `f32.Pt(1, 1)` is corner to corner, whatever the window is
 doing — clips to the incoming constraints, and hands back a `layout.Widget`.
-`FillLinearGradient` is the same paint without the widget, for callers that
+`FillLinearGradient` is the same paint without the component, for callers that
 already own a clip.
 
 ## Where it sits
@@ -63,7 +63,7 @@ gradient := rx.Of(gradient.LinearGradient(
 window.Render(gradient).Wait()
 ```
 
-`rx.Of` is what makes a static widget into a layer: an MVU window renders
+`rx.Of` is what makes a static component into a layer: an MVU window renders
 `rx.Observable[layout.Widget]` streams stacked back to front, and a background
 that never changes is a stream of exactly one element. Add layers by passing
 more observables to `Render`.
@@ -101,7 +101,7 @@ Honest about what does not work yet. Every count below is measured.
 - **The effects layer needed gradients and did not use this one.** `effects/depth`
   composes a cast shadow out of eight linear gradients and `effects/glow` composes
   a halo out of eight more, and both call `paint.LinearGradientOp` directly
-  rather than importing this module — the fractional-stop widget is the wrong
+  rather than importing this module — the fractional-stop component is the wrong
   shape for compositing many gradients into one shape. Nothing in the current
   plan reconciles the two.
 - **Two stops, linear only.** There is no multi-stop gradient, no angle
@@ -118,11 +118,11 @@ Honest about what does not work yet. Every count below is measured.
 - **`FillLinearGradient` paints the current clip, whatever that is.** Called
   with no clip pushed, it fills the entire window. That is the same contract as
   [backdrop](https://github.com/vibrantgio/backdrop)'s `Fill`, and it is easy to
-  reach for by accident when the widget form is what you wanted.
+  reach for by accident when the component form is what you wanted.
 - **Colours are arguments, not roles.** Neither function knows about
   `tokens.ColorTokens`, so a gradient does not follow the theme unless the
   caller re-derives its two colours on every theme emission and rebuilds the
-  widget. There is no token-aware wrapper anywhere in the organization.
+  component. There is no token-aware wrapper anywhere in the organization.
 - **There are no tests and no golden images.** `go test ./...` reports "no test
   files", so nothing pins the fraction-to-pixel arithmetic.
 - **There is no LICENSE file.** Eighteen of the organization's twenty

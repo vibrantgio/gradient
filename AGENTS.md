@@ -1,6 +1,6 @@
 # AGENTS.md — gradient
 
-A two-stop linear gradient fill widget.
+A two-stop linear gradient fill component.
 
 Read the org guide before you write code against this module:
 
