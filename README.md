@@ -95,12 +95,11 @@ Honest about what does not work yet. Every count below is measured.
   program anywhere in the organization that imports this module, and
   `LinearGradient` is the only symbol it uses. `FillLinearGradient` has never
   been called outside this repository.
-- **The effects layer needed gradients and did not use this one.** `effects/depth`
-  composes a cast shadow out of eight linear gradients and `effects/glow` composes
-  a spread out of eight more, and both call `paint.LinearGradientOp` directly
-  rather than importing this module — the fractional-stop component is the wrong
-  shape for compositing many gradients into one shape. Nothing in the current
-  plan reconciles the two.
+- **The effects layer composes its own gradients.** A cast shadow is eight
+  linear gradients and a spread is eight more, and both are painted straight
+  through `paint.LinearGradientOp` rather than through this module — the
+  fractional-stop component is the wrong shape for compositing many gradients
+  into one shape. Nothing reconciles the two yet.
 - **Two stops, linear only.** There is no multi-stop gradient, no angle
   parameter beyond choosing the two points, and no radial gradient — Gio
   exposes no radial primitive at all, which is why `effects` fakes one out of
