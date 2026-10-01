@@ -51,8 +51,7 @@ directly.
 
 ## Usage
 
-The whole of `mvu/example/03-gradient` — a window that is nothing but a
-gradient:
+A whole program — a window that is nothing but a gradient:
 
 ```go
 window := mvu.NewWindow(app.Title("MVU - Gradient"))
@@ -91,22 +90,17 @@ root's [`AGENTS.md`](https://github.com/vibrantgio/.github/blob/master/AGENTS.md
 
 Honest about what does not work yet. Every count below is measured.
 
-- **One consumer, one call site.** `mvu/example/03-gradient` is the only
-  program anywhere in the organization that imports this module, and
-  `LinearGradient` is the only symbol it uses. `FillLinearGradient` has never
-  been called outside this repository.
-- **The effects layer composes its own gradients.** A cast shadow is eight
-  linear gradients and a spread is eight more, and both are painted straight
-  through `paint.LinearGradientOp` rather than through this module — the
-  fractional-stop component is the wrong shape for compositing many gradients
-  into one shape. Nothing reconciles the two yet.
+- **Compositing many gradients into one shape wants a different shape.** A
+  cast shadow is eight linear gradients and a spread is eight more; code that
+  paints such a set goes straight to `paint.LinearGradientOp`, because a
+  component whose stops are fractions of the space it is handed cannot place
+  sixteen gradients inside one clip. Nothing reconciles the two forms yet.
 - **Two stops, linear only.** There is no multi-stop gradient, no angle
-  parameter beyond choosing the two points, and no radial gradient — Gio
-  exposes no radial primitive at all, which is why `effects` fakes one out of
-  eight linear passes. Phase E of the
-  [org plan](https://github.com/vibrantgio/.github) built `effects/blur` on
-  `gioui.org/gpu/headless` and revisited that — the E4.4 verdict kept the
-  eight-gradient glow — and it did not claim this module.
+  parameter beyond choosing the two points, and no radial gradient: Gio
+  exposes no radial primitive at all, so a radial look is faked out of eight
+  linear passes. A spike built a GPU blur on `gioui.org/gpu/headless` and
+  weighed a blurred radial against that eight-gradient composition; the
+  composition stayed, and the spike claimed nothing of this module.
 - **`LinearGradient` always takes all the space it is offered.** It clips to
   and returns `gtx.Constraints.Max`, ignoring `Constraints.Min`, so as a flex
   child it fills the flex rather than sizing to anything. It is a background
