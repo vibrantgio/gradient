@@ -97,7 +97,7 @@ Honest about what does not work yet. Every count below is measured.
   been called outside this repository.
 - **The effects layer needed gradients and did not use this one.** `effects/depth`
   composes a cast shadow out of eight linear gradients and `effects/glow` composes
-  a halo out of eight more, and both call `paint.LinearGradientOp` directly
+  a spread out of eight more, and both call `paint.LinearGradientOp` directly
   rather than importing this module — the fractional-stop component is the wrong
   shape for compositing many gradients into one shape. Nothing in the current
   plan reconciles the two.
