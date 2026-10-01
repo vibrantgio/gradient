@@ -107,7 +107,7 @@ Honest about what does not work yet. Every count below is measured.
   eight linear passes. Phase E of the
   [org plan](https://github.com/vibrantgio/.github) built `effects/blur` on
   `gioui.org/gpu/headless` and revisited that — the E4.4 verdict kept the
-  eight-gradient halo — and it did not claim this module.
+  eight-gradient glow — and it did not claim this module.
 - **`LinearGradient` always takes all the space it is offered.** It clips to
   and returns `gtx.Constraints.Max`, ignoring `Constraints.Min`, so as a flex
   child it fills the flex rather than sizing to anything. It is a background
