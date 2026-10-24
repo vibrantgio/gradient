@@ -2,8 +2,7 @@
 
 A two-stop linear gradient fill for [Vibrant Gio](https://github.com/vibrantgio),
 a design system for native desktop applications on macOS, Windows and Linux,
-written in pure Go on [Gio](https://gioui.org). Two functions, thirty lines,
-no state.
+written in pure Go on [Gio](https://gioui.org). Two functions, no state.
 
 Gio has `paint.LinearGradientOp`, and it is not quite usable on its own. It
 takes its two stops as absolute `f32.Point`s in the current coordinate space,
@@ -26,15 +25,13 @@ a leaf whose only dependency is Gio. The
 [organization page](https://github.com/vibrantgio) has the full tier table.
 
 It sits alongside [backdrop](https://github.com/vibrantgio/backdrop) and
-[circle](https://github.com/vibrantgio/circle), the other two drawing leaves:
-the three of them are what an MVU application composes its bottom layer out of
-before any component is involved.
+[circle](https://github.com/vibrantgio/circle), the other two drawing leaves.
 
 ```sh
 go get github.com/vibrantgio/gradient
 ```
 
-Every module in the organization is on gioui.org v0.10.2 and Go 1.25.1.
+The Gio and Go versions are the ones `go.mod` names.
 
 ## Packages
 
@@ -46,7 +43,7 @@ One package, at the module root.
 | `FillLinearGradient(ops, stop1, color1, stop2, color2)` | The same paint straight into an `*op.Ops`, with stops in absolute pixels and no clip of its own — it fills whatever clip is current. |
 
 Both take `color.Color`, not `color.NRGBA`, and convert through
-`color.NRGBAModel`, so a `colornames` value or an `color.RGBA` goes in
+`color.NRGBAModel`, so a `colornames` value or a `color.RGBA` goes in
 directly.
 
 ## Usage
@@ -83,24 +80,20 @@ gradient.FillLinearGradient(gtx.Ops,
 
 Read the org guide before you write code against this module: the plan
 root's [`AGENTS.md`](https://github.com/vibrantgio/organisation/blob/master/AGENTS.md).
-
-[`AGENTS.md`](./AGENTS.md) in this repository has the build and test commands.
+The build and test commands are reached from that file.
 
 ## Status
 
-Honest about what does not work yet. Every count below is measured.
+Honest about what does not work yet.
 
 - **Compositing many gradients into one shape wants a different shape.** A
-  cast shadow is eight linear gradients and a spread is eight more; code that
-  paints such a set goes straight to `paint.LinearGradientOp`, because a
-  component whose stops are fractions of the space it is handed cannot place
-  sixteen gradients inside one clip. Nothing reconciles the two forms yet.
+  shadow drawn as a set of gradient tiles goes straight to
+  `paint.LinearGradientOp`, because a component whose stops are fractions of
+  the space it is handed cannot place several gradients inside one clip.
 - **Two stops, linear only.** There is no multi-stop gradient, no angle
   parameter beyond choosing the two points, and no radial gradient: Gio
-  exposes no radial primitive at all, so a radial look is faked out of eight
-  linear passes. A spike built a GPU blur on `gioui.org/gpu/headless` and
-  weighed a blurred radial against that eight-gradient composition; the
-  composition stayed, and the spike claimed nothing of this module.
+  exposes no radial primitive at all, so a radial look is approximated out of
+  eight linear passes.
 - **`LinearGradient` always takes all the space it is offered.** It clips to
   and returns `gtx.Constraints.Max`, ignoring `Constraints.Min`, so as a flex
   child it fills the flex rather than sizing to anything. It is a background
@@ -108,14 +101,14 @@ Honest about what does not work yet. Every count below is measured.
 - **`FillLinearGradient` paints the current clip, whatever that is.** Called
   with no clip pushed, it fills the entire window. That is the same contract as
   [backdrop](https://github.com/vibrantgio/backdrop)'s `Fill`, and it is easy to
-  reach for by accident when the component form is what you wanted.
-- **Colours are arguments, not roles.** Neither function knows about
-  `tokens.ColorTokens`, so a gradient does not follow the theme unless the
+  use by accident when the component form is what you wanted.
+- **Colours are arguments, not colour roles.** Neither function knows about
+  `tokens.PlatformColors`, so a gradient does not follow the theme unless the
   caller re-derives its two colours on every theme emission and rebuilds the
-  component. There is no token-aware wrapper anywhere in the organization.
+  component. This module has no token-aware wrapper.
 - **There are no tests and no golden images.** `go test ./...` reports "no test
   files", so nothing pins the fraction-to-pixel arithmetic.
-- **There is no LICENSE file.** Eighteen of the organization's twenty
-  repositories ship one — MIT for most, BSD, Apache or Unlicense for the ported
-  libraries. This one and [circle](https://github.com/vibrantgio/circle) are
-  the two that do not, and no phase of the current plan adds them.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
